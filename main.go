@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"sync"
 
 	"github.com/f2prateek/hn2instapaper/hn"
 	"github.com/f2prateek/hn2instapaper/instapaper"
+	"github.com/f2prateek/semaphore"
 	"github.com/tj/docopt"
 )
 
@@ -40,6 +42,7 @@ func main() {
 	stories, err := hnClient.TopStories()
 	check(err)
 
+	s := semaphore.New(10)
 	var wg sync.WaitGroup
 	for i, id := range stories {
 		if i >= limit {
@@ -47,13 +50,17 @@ func main() {
 		}
 
 		wg.Add(1)
+		s.Acquire(1)
+
 		go func(id int) {
 			defer wg.Done()
+			defer s.Release(1)
 
 			story, err := hnClient.GetPost(id)
 			check(err)
 			if story.URL == nil {
 				fmt.Println("Skipping", *story.Title)
+				return
 			}
 
 			_, err = instapaperClient.Add(instapaper.AddParams{
@@ -69,6 +76,6 @@ func main() {
 
 func check(err error) {
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
