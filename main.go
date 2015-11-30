@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/f2prateek/hn-to-instapaper/hn"
-	"github.com/f2prateek/hn-to-instapaper/instapaper"
+	"github.com/f2prateek/hn2instapaper/hn"
+	"github.com/f2prateek/hn2instapaper/instapaper"
 	"github.com/tj/docopt"
 )
 
 const (
 	usage = `hn2instapaper.
+
+Save top HN articles to Instapaper.
 
 Usage:
   hn2instapaper <username> <password>
