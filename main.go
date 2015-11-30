@@ -22,10 +22,12 @@ Usage:
 Options:
   -h --help     Show this screen.
   --version     Show version.`
+
+	version = "1.0.0"
 )
 
 func main() {
-	arguments, err := docopt.Parse(usage, nil, true, "Naval Fate 2.0", false)
+	arguments, err := docopt.Parse(usage, nil, true, version, false)
 	if err != nil {
 		log.Fatal(err)
 	}
