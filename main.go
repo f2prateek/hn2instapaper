@@ -36,20 +36,26 @@ func main() {
 		log.Fatal(err)
 	}
 
-	for i, id := range stories {
+	for _, id := range stories {
 		story, err := hnClient.GetPost(id)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("Adding", *story.Title)
 
-		result, err := instapaperClient.Add(instapaper.AddParams{
-			URL:   *story.URL,
-			Title: story.Title,
-		})
-		if err != nil {
-			log.Fatal(err)
+		if story.URL == nil {
+			fmt.Println("Skipping", *story.Title)
+			continue
 		}
-		fmt.Println(i, result.BookmarkID)
+
+		go func(story hn.Item) {
+			_, err := instapaperClient.Add(instapaper.AddParams{
+				URL:   *story.URL,
+				Title: story.Title,
+			})
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println("Saved", *story.Title)
+		}(story)
 	}
 }
