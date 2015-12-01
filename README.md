@@ -3,6 +3,10 @@ hn2instapaper
 
 Save the top HN articles to Instapaper.
 
+# Installation
+
+`go get github.com/f2prateek/hn2instapaper`
+
 # Usage
 
 ```
